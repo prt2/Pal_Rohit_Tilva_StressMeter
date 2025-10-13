@@ -7,7 +7,7 @@
     <fragment
         android:id="@+id/nav_stress_meter"
         android:name="com.example.pal_rohit_tilva_stressmeter.StressMeterFragment"
-        android:label="Stress Meter" />
+        android:label="Pal_Rohit_Tilva_StressMeter" />
 
     <fragment
         android:id="@+id/nav_results"

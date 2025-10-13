@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
             android:theme="@style/ThemeOverlay.MaterialComponents.Dark.ActionBar"
-            android:title="Stress Meter" />
+            android:title="Pal_Rohit_Tilva_StressMeter" />
 
         <!-- ✅ This must exist, with this exact ID -->
         <fragment

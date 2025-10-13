@@ -3,7 +3,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_stress_meter"
-            android:title="StressMeter" />
+            android:title="Pal_Rohit_Tilva_StressMeter" />
         <item
             android:id="@+id/nav_results"
             android:title="Results" />

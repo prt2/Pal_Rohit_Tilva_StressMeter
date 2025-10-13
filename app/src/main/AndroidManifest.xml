@@ -7,7 +7,7 @@
 
     <application
         android:allowBackup="true"
-        android:label="Stress Meter"
+        android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar">
