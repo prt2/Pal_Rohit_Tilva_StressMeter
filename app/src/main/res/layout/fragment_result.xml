@@ -2,50 +2,73 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
+    android:background="#F9F9F9">
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal">
+        android:padding="12dp">
 
-        <!-- 📊 Custom Graph View -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="A graph showing your Stress Levels"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal"
+            android:paddingBottom="8dp" />
+
         <com.example.pal_rohit_tilva_stressmeter.GraphView
             android:id="@+id/graphView"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:layout_marginBottom="24dp"
-            android:background="#EAEAEA" />
+            android:background="#EEEEEE"
+            android:layout_marginBottom="20dp" />
 
-        <!-- 🧾 Results Table -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Summary of Results"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_gravity="center_horizontal"
+            android:paddingBottom="8dp" />
+
         <TableLayout
             android:id="@+id/resultsTable"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:stretchColumns="1"
-            android:shrinkColumns="0"
-            android:padding="8dp"
-            android:background="#FFFFFF"
-            android:divider="#CCCCCC"
+            android:shrinkColumns="0,1"
+            android:background="#000000"
+            android:divider="@android:color/black"
             android:showDividers="middle">
 
-            <TableRow>
+            <TableRow
+                android:background="#AAAAAA"
+                android:padding="4dp">
+
                 <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
                     android:text="Time"
                     android:textStyle="bold"
-                    android:padding="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:padding="6dp" />
+
                 <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:layout_height="wrap_content"
                     android:text="Stress"
                     android:textStyle="bold"
-                    android:padding="8dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:padding="6dp" />
             </TableRow>
-
         </TableLayout>
-
     </LinearLayout>
 </ScrollView>

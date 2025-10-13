@@ -3,8 +3,11 @@ package com.example.pal_rohit_tilva_stressmeter
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
+import android.view.GestureDetector
+import android.view.MotionEvent
 import android.view.View
-import kotlin.math.roundToInt
+import kotlin.math.max
+import kotlin.math.min
 
 class GraphView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
 
@@ -15,8 +18,8 @@ class GraphView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
         }
 
     private val axisPaint = Paint().apply {
-        color = Color.BLACK
-        strokeWidth = 3f
+        color = Color.GRAY
+        strokeWidth = 2f
         style = Paint.Style.STROKE
         isAntiAlias = true
     }
@@ -35,19 +38,43 @@ class GraphView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
     }
 
     private val fillPaint = Paint().apply {
-        color = Color.argb(80, 0, 0, 255) // light blue shade
+        color = Color.argb(100, 0, 0, 255)
         style = Paint.Style.FILL
     }
 
     private val pointPaint = Paint().apply {
-        color = Color.RED
+        color = Color.BLUE
         style = Paint.Style.FILL
     }
 
     private val textPaint = Paint().apply {
-        color = Color.BLACK
+        color = Color.DKGRAY
+        textSize = 28f
+        isAntiAlias = true
+    }
+
+    private val labelPaint = Paint().apply {
+        color = Color.GRAY
         textSize = 30f
         isAntiAlias = true
+        textAlign = Paint.Align.CENTER
+    }
+
+    // Zoom variables
+    private var scaleFactor = 1f
+    private val minZoom = 1f
+    private val maxZoom = 3f
+    private val gestureDetector = GestureDetector(context, object : GestureDetector.SimpleOnGestureListener() {
+        override fun onDoubleTap(e: MotionEvent): Boolean {
+            scaleFactor = if (scaleFactor > 1f) 1f else 2f
+            invalidate()
+            return true
+        }
+    })
+
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        gestureDetector.onTouchEvent(event)
+        return true
     }
 
     override fun onDraw(canvas: Canvas) {
@@ -55,29 +82,33 @@ class GraphView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
         if (scores.isEmpty()) return
 
         val padding = 100f
-        val graphWidth = width - 2 * padding
+        val graphWidth = (width - 2 * padding) * scaleFactor
         val graphHeight = height - 2 * padding
 
-        // Draw axes
+        // origin
         val originX = padding
         val originY = height - padding
+
+        // axes
         canvas.drawLine(originX, padding, originX, originY, axisPaint)
         canvas.drawLine(originX, originY, width - padding, originY, axisPaint)
 
-        val maxY = (scores.maxOrNull() ?: 10).toFloat().coerceAtLeast(10f)
+        // labels
+        canvas.drawText("Stress Level", 50f, padding - 20f, labelPaint)
+        canvas.drawText("Instances", width / 2f, height - 30f, labelPaint)
+
+        val maxY = max(scores.maxOrNull()?.toFloat() ?: 10f, 10f)
         val stepX = graphWidth / (scores.size - 1).coerceAtLeast(1)
 
-        // Grid lines + labels
+        // grid + y labels
         for (i in 0..10) {
             val y = originY - (graphHeight / 10) * i
             canvas.drawLine(originX, y, width - padding, y, gridPaint)
-            canvas.drawText("${(maxY / 10 * i).roundToInt()}", 10f, y + 10f, textPaint)
+            canvas.drawText("${(maxY / 10 * i).toInt()}", 20f, y + 10f, textPaint)
         }
 
-        // Build path for line & fill
         val path = Path()
-        val fillPath = Path()
-        fillPath.moveTo(originX, originY)
+        val fillPath = Path().apply { moveTo(originX, originY) }
 
         scores.forEachIndexed { i, score ->
             val x = originX + i * stepX
@@ -91,14 +122,12 @@ class GraphView(context: Context, attrs: AttributeSet?) : View(context, attrs) {
                 fillPath.lineTo(x, y)
             }
 
-            // Draw data point
             canvas.drawCircle(x, y, 8f, pointPaint)
         }
 
         fillPath.lineTo(originX + (scores.size - 1) * stepX, originY)
         fillPath.close()
 
-        // Fill + draw line
         canvas.drawPath(fillPath, fillPaint)
         canvas.drawPath(path, linePaint)
     }

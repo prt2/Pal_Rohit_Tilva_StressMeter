@@ -1,12 +1,10 @@
 package com.example.pal_rohit_tilva_stressmeter
 
+import android.graphics.Color
+import android.graphics.Typeface
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TableLayout
-import android.widget.TableRow
-import android.widget.TextView
+import android.view.*
+import android.widget.*
 import androidx.fragment.app.Fragment
 import java.io.File
 
@@ -25,19 +23,44 @@ class ResultFragment : Fragment() {
 
         if (file.exists()) {
             val lines = file.readLines()
-            for (line in lines) {
+
+            lines.forEachIndexed { index, line ->
                 val parts = line.split(",")
                 if (parts.size == 2) {
                     val timestamp = parts[0]
-                    val score = parts[1].toIntOrNull() ?: continue
+                    val score = parts[1].toIntOrNull() ?: return@forEachIndexed
                     scores.add(score)
 
-                    // Add row to table
-                    val row = TableRow(requireContext())
-                    val timeText = TextView(requireContext())
-                    val scoreText = TextView(requireContext())
-                    timeText.text = timestamp
-                    scoreText.text = score.toString()
+                    val row = TableRow(requireContext()).apply {
+                        if (index % 2 == 0) setBackgroundColor(Color.parseColor("#F7F7F7"))
+                        else setBackgroundColor(Color.parseColor("#FFFFFF"))
+                    }
+
+                    val border = TableRow.LayoutParams(
+                        TableRow.LayoutParams.MATCH_PARENT,
+                        TableRow.LayoutParams.WRAP_CONTENT
+                    ).apply {
+                        setMargins(1, 1, 1, 1)
+                    }
+
+                    val timeText = TextView(requireContext()).apply {
+                        text = timestamp
+                        textSize = 15f
+                        setTextColor(Color.BLACK)
+                        setPadding(8, 6, 8, 6)
+                        layoutParams = border
+                    }
+
+                    val scoreText = TextView(requireContext()).apply {
+                        text = score.toString()
+                        textSize = 15f
+                        gravity = Gravity.CENTER
+                        setTypeface(null, Typeface.BOLD)
+                        setTextColor(Color.BLACK)
+                        setPadding(8, 6, 8, 6)
+                        layoutParams = border
+                    }
+
                     row.addView(timeText)
                     row.addView(scoreText)
                     tableLayout.addView(row)
