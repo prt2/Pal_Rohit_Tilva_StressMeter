@@ -46,7 +46,7 @@ class StressMeterFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_stress_meter, container, false)
 
         imageGrid = view.findViewById(R.id.imageGrid)
-        moreButton = view.findViewById(R.id.moreButton)
+        moreButton = view.findViewById(R.id.moreImagesButton)
 
         // show the first 16 images
         showImageSet(0)

@@ -11,34 +11,49 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 
 class ResultFragment : Fragment() {
+
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
+        inflater: LayoutInflater,
+        container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_results, container, false)
-        val tableLayout = view.findViewById<TableLayout>(R.id.tableLayout)
+        val view = inflater.inflate(R.layout.fragment_result, container, false)
 
-        val dummyData = listOf(
-            Pair("10:00 AM", "7"),
-            Pair("2:00 PM", "4"),
-            Pair("7:00 PM", "9")
-        )
+        val chartView = view.findViewById<StressGraphView>(R.id.stressGraph)
+        val table = view.findViewById<TableLayout>(R.id.resultsTable)
 
-        for ((time, stress) in dummyData) {
-            val row = TableRow(context)
-            val t1 = TextView(context)
-            val t2 = TextView(context)
+        // --- Fake data for now ---
+        val stressValues = listOf(7, 10, 7, 2)
+        val timestamps = listOf("1760314705", "1760314739", "1760314749", "1760314768")
 
-            t1.text = time
-            t2.text = stress
-            t1.setTextColor(Color.BLACK)
-            t2.setTextColor(Color.BLACK)
-            t1.setPadding(16, 8, 16, 8)
-            t2.setPadding(16, 8, 16, 8)
+        chartView.setStressData(stressValues)
 
-            row.addView(t1)
-            row.addView(t2)
-            tableLayout.addView(row)
+        // --- Header row ---
+        val header = TableRow(requireContext())
+        val timeHeader = TextView(requireContext())
+        val stressHeader = TextView(requireContext())
+        timeHeader.text = "Time"
+        stressHeader.text = "Stress"
+        timeHeader.setPadding(16, 8, 16, 8)
+        stressHeader.setPadding(16, 8, 16, 8)
+        timeHeader.setBackgroundColor(Color.LTGRAY)
+        stressHeader.setBackgroundColor(Color.LTGRAY)
+        header.addView(timeHeader)
+        header.addView(stressHeader)
+        table.addView(header)
+
+        // --- Data rows ---
+        for (i in stressValues.indices) {
+            val row = TableRow(requireContext())
+            val timeCell = TextView(requireContext())
+            val stressCell = TextView(requireContext())
+            timeCell.text = timestamps[i]
+            stressCell.text = stressValues[i].toString()
+            timeCell.setPadding(16, 8, 16, 8)
+            stressCell.setPadding(16, 8, 16, 8)
+            row.addView(timeCell)
+            row.addView(stressCell)
+            table.addView(row)
         }
 
         return view

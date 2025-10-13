@@ -1,31 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+    android:gravity="center_horizontal"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <TextView
-        android:text="Touch the image that best captures how stressed you feel right now"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="8dp"
-        android:textSize="16sp" />
-
     <GridView
         android:id="@+id/imageGrid"
+        android:numColumns="4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:numColumns="4"
-        android:horizontalSpacing="8dp"
-        android:verticalSpacing="8dp" />
+        android:verticalSpacing="4dp"
+        android:horizontalSpacing="4dp" />
 
     <Button
-        android:id="@+id/moreButton"
+        android:id="@+id/moreImagesButton"
+        android:text="MORE IMAGES"
+        android:layout_marginTop="20dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="More Images"
-        android:layout_marginTop="16dp" />
-
+        android:layout_height="wrap_content" />
 </LinearLayout>

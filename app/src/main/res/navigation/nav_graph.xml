@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/nav_stress_meter">
 
     <fragment
         android:id="@+id/nav_stress_meter"
         android:name="com.example.pal_rohit_tilva_stressmeter.StressMeterFragment"
-        android:label="Stress Meter"
-        tools:layout="@layout/fragment_stress_meter" />
+        android:label="Stress Meter" />
 
     <fragment
         android:id="@+id/nav_results"
         android:name="com.example.pal_rohit_tilva_stressmeter.ResultFragment"
-        android:label="Results"
-        tools:layout="@layout/fragment_results" />
+        android:label="Results" />
 
 </navigation>
