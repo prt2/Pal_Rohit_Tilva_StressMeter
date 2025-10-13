@@ -4,23 +4,38 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import java.io.BufferedWriter
+import java.io.File
+import java.io.FileWriter
 
 class ImagePreviewActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_image_preview)
 
-        val cancelButton = findViewById<Button>(R.id.cancelButton)
-        val submitButton = findViewById<Button>(R.id.submitButton)
-        val previewImage = findViewById<ImageView>(R.id.previewImageView)
+        val imageView = findViewById<ImageView>(R.id.previewImageView)
+        val btnSubmit = findViewById<Button>(R.id.btnSubmit)
+        val btnCancel = findViewById<Button>(R.id.btnCancel)
 
         val imageResId = intent.getIntExtra("imageResId", 0)
-        previewImage.setImageResource(imageResId)
+        val score = intent.getIntExtra("score", 0)
+        imageView.setImageResource(imageResId)
 
-        cancelButton.setOnClickListener { finish() }
+        btnSubmit.setOnClickListener {
+            val timestamp = System.currentTimeMillis() / 1000
+            val file = File(filesDir, "stress_timestamp.csv")
 
-        submitButton.setOnClickListener {
-            finish() // later could save stress level entry here
+            BufferedWriter(FileWriter(file, true)).use { writer ->
+                writer.append("$timestamp,$score\n")
+            }
+
+            // Exit the app (as per assignment)
+            finishAffinity()
+        }
+
+        btnCancel.setOnClickListener {
+            finish()
         }
     }
 }

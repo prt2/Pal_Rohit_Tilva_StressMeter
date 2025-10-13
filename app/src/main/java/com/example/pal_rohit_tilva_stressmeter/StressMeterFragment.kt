@@ -13,31 +13,10 @@ class StressMeterFragment : Fragment() {
 
     private lateinit var imageGrid: GridView
     private lateinit var imageGridAdapter: ImageGridAdapter
-    private lateinit var moreButton: Button
 
-    // 🔹 All 49 drawable images you provided
-    private val allImages = listOf(
-        R.drawable.fish_normal017, R.drawable.psm_alarm_clock, R.drawable.psm_alarm_clock2,
-        R.drawable.psm_angry_face, R.drawable.psm_anxious, R.drawable.psm_baby_sleeping,
-        R.drawable.psm_bar, R.drawable.psm_barbed_wire2, R.drawable.psm_beach3,
-        R.drawable.psm_bird3, R.drawable.psm_blue_drop, R.drawable.psm_cat,
-        R.drawable.psm_clutter, R.drawable.psm_clutter3, R.drawable.psm_dog_sleeping,
-        R.drawable.psm_exam4, R.drawable.psm_gambling4, R.drawable.psm_headache,
-        R.drawable.psm_headache2, R.drawable.psm_hiking3, R.drawable.psm_kettle,
-        R.drawable.psm_lake3, R.drawable.psm_lawn_chairs3, R.drawable.psm_lonely,
-        R.drawable.psm_lonely2, R.drawable.psm_mountains11, R.drawable.psm_neutral_child,
-        R.drawable.psm_neutral_person2, R.drawable.psm_peaceful_person, R.drawable.psm_puppy,
-        R.drawable.psm_puppy3, R.drawable.psm_reading_in_bed2, R.drawable.psm_running3,
-        R.drawable.psm_running4, R.drawable.psm_sticky_notes2, R.drawable.psm_stressed_cat,
-        R.drawable.psm_stressed_person, R.drawable.psm_stressed_person3,
-        R.drawable.psm_stressed_person4, R.drawable.psm_stressed_person6,
-        R.drawable.psm_stressed_person7, R.drawable.psm_stressed_person12,
-        R.drawable.psm_talking_on_phone2, R.drawable.psm_to_do_list,
-        R.drawable.psm_to_do_list3, R.drawable.psm_wine3, R.drawable.psm_work4,
-        R.drawable.psm_yoga4
-    )
-
-    private var currentSetIndex = 0
+    private var allImages: List<Int> = emptyList()
+    private var currentPage = 0
+    private val imagesPerPage = 16
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,32 +25,59 @@ class StressMeterFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_stress_meter, container, false)
 
         imageGrid = view.findViewById(R.id.imageGrid)
-        moreButton = view.findViewById(R.id.moreImagesButton)
+        val moreButton = view.findViewById<Button>(R.id.moreImagesButton)
 
-        // show the first 16 images
-        showImageSet(0)
+        // ✅ Dynamically load all drawables that start with "psm_"
+        allImages = getAllPsmDrawables()
+
+        // ✅ Display the first 16
+        updateGrid()
 
         imageGrid.setOnItemClickListener { _, _, position, _ ->
-            val intent = Intent(requireContext(), ImagePreviewActivity::class.java)
-            intent.putExtra("imageResId", imageGridAdapter.getItem(position) as Int)
-            startActivity(intent)
+            val globalIndex = currentPage * imagesPerPage + position
+            if (globalIndex < allImages.size) {
+                val imageResId = allImages[globalIndex]
+                val score = (globalIndex % 10) + 1 // can use any mapping formula
+
+                val intent = Intent(requireContext(), ImagePreviewActivity::class.java).apply {
+                    putExtra("imageResId", imageResId)
+                    putExtra("score", score)
+                }
+                startActivity(intent)
+            }
         }
 
         moreButton.setOnClickListener {
-            currentSetIndex = (currentSetIndex + 1) % getTotalSets()
-            showImageSet(currentSetIndex)
+            // ✅ Cycle through pages
+            currentPage = (currentPage + 1) % ((allImages.size + imagesPerPage - 1) / imagesPerPage)
+            updateGrid()
         }
 
         return view
     }
 
-    private fun getTotalSets(): Int = (allImages.size + 15) / 16
+    private fun updateGrid() {
+        if (allImages.isEmpty()) return
+        val startIndex = currentPage * imagesPerPage
+        val endIndex = minOf(startIndex + imagesPerPage, allImages.size)
+        val currentImages = allImages.subList(startIndex, endIndex)
 
-    private fun showImageSet(index: Int) {
-        val start = index * 16
-        val end = minOf(start + 16, allImages.size)
-        val currentSet = allImages.subList(start, end)
-        imageGridAdapter = ImageGridAdapter(requireContext(), currentSet)
+        imageGridAdapter = ImageGridAdapter(requireContext(), currentImages)
         imageGrid.adapter = imageGridAdapter
+    }
+
+    // ✅ Automatically collect all drawables named psm_*
+    private fun getAllPsmDrawables(): List<Int> {
+        val fields = R.drawable::class.java.fields
+        return fields
+            .filter { it.name.startsWith("psm_") } // match all "psm_" drawables
+            .mapNotNull {
+                try {
+                    it.getInt(null)
+                } catch (e: Exception) {
+                    null
+                }
+            }
+            .sortedBy { it } // optional: keeps list order consistent
     }
 }
