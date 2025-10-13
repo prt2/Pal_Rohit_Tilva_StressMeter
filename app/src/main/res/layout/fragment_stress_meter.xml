@@ -6,6 +6,18 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
+    <TextView
+        android:id="@+id/stressPrompt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="12dp"
+        android:text="Touch the image that best captures how stressed you feel right now"
+        android:textAlignment="center"
+        android:textColor="@android:color/darker_gray"
+        android:textSize="18sp"
+        android:fontFamily="sans-serif-medium" />
+
     <GridView
         android:id="@+id/imageGrid"
         android:numColumns="4"
