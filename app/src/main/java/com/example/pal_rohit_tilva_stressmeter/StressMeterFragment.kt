@@ -27,17 +27,25 @@ class StressMeterFragment : Fragment() {
         imageGrid = view.findViewById(R.id.imageGrid)
         val moreButton = view.findViewById<Button>(R.id.moreImagesButton)
 
-        // ✅ Dynamically load all drawables that start with "psm_"
+        // Dynamically load all drawables that start with "psm_"
         allImages = getAllPsmDrawables()
 
-        // ✅ Display the first 16
         updateGrid()
 
         imageGrid.setOnItemClickListener { _, _, position, _ ->
             val globalIndex = currentPage * imagesPerPage + position
             if (globalIndex < allImages.size) {
                 val imageResId = allImages[globalIndex]
-                val score = (globalIndex % 10) + 1 // can use any mapping formula
+
+                // ✅ Stress scores based on your reference grid (1–16 pattern)
+                val stressScores = listOf(
+                    6, 8, 14, 16,  // Row 1
+                    5, 7, 13, 15,  // Row 2
+                    2, 4, 10, 12,  // Row 3
+                    1, 3, 9, 11    // Row 4
+                )
+                val score = stressScores[globalIndex]
+
 
                 val intent = Intent(requireContext(), ImagePreviewActivity::class.java).apply {
                     putExtra("imageResId", imageResId)
@@ -48,7 +56,6 @@ class StressMeterFragment : Fragment() {
         }
 
         moreButton.setOnClickListener {
-            // ✅ Cycle through pages
             currentPage = (currentPage + 1) % ((allImages.size + imagesPerPage - 1) / imagesPerPage)
             updateGrid()
         }

@@ -15,13 +15,21 @@ class ImageGridAdapter(private val context: Context, private var imageList: List
         val imageView = convertView as? ImageView ?: ImageView(context)
         imageView.layoutParams = ViewGroup.LayoutParams(250, 250)
         imageView.scaleType = ImageView.ScaleType.CENTER_CROP
-        imageView.setPadding(8, 8, 8, 8)
         imageView.setImageResource(imageList[position])
         return imageView
     }
+
+    private val stressScores = listOf(
+        1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16
+    )
 
     fun updateData(newList: List<Int>) {
         imageList = newList
         notifyDataSetChanged()
     }
+
+    fun getScore(position: Int): Int {
+        return stressScores.getOrElse(position) { 0 }
+    }
+
 }
