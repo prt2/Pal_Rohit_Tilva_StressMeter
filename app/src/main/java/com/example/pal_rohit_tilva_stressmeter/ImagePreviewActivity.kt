@@ -10,6 +10,9 @@ import java.io.FileWriter
 
 class ImagePreviewActivity : AppCompatActivity() {
 
+    /**
+     * Initializes the activity, sets up the views, and handles the user's actions.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_image_preview)
@@ -18,23 +21,28 @@ class ImagePreviewActivity : AppCompatActivity() {
         val btnSubmit = findViewById<Button>(R.id.btnSubmit)
         val btnCancel = findViewById<Button>(R.id.btnCancel)
 
+        // Get the image resource ID and the stress score from the intent
         val imageResId = intent.getIntExtra("imageResId", 0)
         val score = intent.getIntExtra("score", 0)
         imageView.setImageResource(imageResId)
 
+        // Set a click listener for the "Submit" button
         btnSubmit.setOnClickListener {
             val timestamp = System.currentTimeMillis() / 1000
             val file = File(filesDir, "stress_timestamp.csv")
 
+            // Append the timestamp and score to the CSV file
             BufferedWriter(FileWriter(file, true)).use { writer ->
                 writer.append("$timestamp,$score\n")
             }
 
-            // Exit the app (as per assignment)
+            // Close the app
             finishAffinity()
         }
 
+        // Set a click listener for the "Cancel" button
         btnCancel.setOnClickListener {
+            // Go back to the previous activity
             finish()
         }
     }
